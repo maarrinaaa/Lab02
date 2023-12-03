@@ -1,5 +1,7 @@
 ﻿
 
+using System.Reflection.Metadata;
+
 namespace Lab02
 {
     internal class Program
@@ -27,16 +29,24 @@ namespace Lab02
                         AddBookToCatalog(library);
                         break;
                     case "2":
-                        SearchByTitle(library);
+                        Console.Write("Введите название или его фрагмент: ");
+                        string title = Console.ReadLine();
+                        DisplayResults(library.SearchByTitle(title));
                         break;
                     case "3":
-                        SearchByAuthor(library);
+                        Console.Write("Введите имя автора или его фрагмент: ");
+                        string author = Console.ReadLine();
+                        DisplayResults(library.SearchByAuthor(author));
                         break;
                     case "4":
-                        SearchByISBN(library);
+                        Console.Write("Введите ISBN: ");
+                        string isbn = Console.ReadLine();
+                        DisplayResults(library.SearchByISBN(isbn));
                         break;
                     case "5":
-                        SearchByTags(library);
+                        Console.Write("Введите теги через пробел: ");
+                        string[] tags = Console.ReadLine().Split(' ');
+                        DisplayResults(library.SearchByTags(tags));
                         break;
                     case "6":
                         Environment.Exit(0);
@@ -50,68 +60,49 @@ namespace Lab02
 
         static void AddBookToCatalog(Library library)
         {
-            Book book = new Book();
+            BookBuilder book = new BookBuilder();
 
             Console.Write("Введите название: ");
-            book.Title = Console.ReadLine();
+            book.SetTitle(Console.ReadLine());
 
             Console.Write("Введите автора: ");
-            book.Author = Console.ReadLine();
+            book.SetAuthor(Console.ReadLine());
 
             Console.Write("Введите жанры через запятую: ");
             string[] genres = Console.ReadLine().Split(',');
-            book.Genres = genres.Select(g => g.Trim()).ToList();
+            book.SetGenres(genres.Select(g => g.Trim()).ToList());
 
             Console.Write("Введите дату публикации (год-месяц-день): ");
             if (DateTime.TryParse(Console.ReadLine(), out DateTime date))
             {
-                book.PublicationDate = date;
+                book.SetPublicationDate(date);
             }
             else
             {
                 Console.WriteLine("Неверный формат даты");
-                book.PublicationDate = DateTime.MinValue;
+                book.SetPublicationDate(DateTime.MinValue);
             }
 
             Console.Write("Введите аннотацию: ");
-            book.Annotation = Console.ReadLine();
+            book.SetAnnotation(Console.ReadLine());
 
             Console.Write("Введите ISBN: ");
-            book.ISBN = Console.ReadLine();
+            book.SetISBN(Console.ReadLine());
 
             Console.Write("Введите теги через пробел: ");
             string[] tags = Console.ReadLine().Split(' ');
-            book.Tags = tags.Select(g => g.Trim()).ToList();
+            book.SetTags(tags.Select(g => g.Trim()).ToList());
 
-            library.AddBook(book);
+            library.AddBook(book.Build());
+            Console.WriteLine("\nКнига добавлена в каталог");
         }
 
-        static void SearchByTitle(Library library)
+        private static void DisplayResults(IEnumerable<Book> books)
         {
-            Console.Write("Введите название или его фрагмент: ");
-            string title = Console.ReadLine();
-            library.SearchByTitle(title);
-        }
-
-        static void SearchByAuthor(Library library)
-        {
-            Console.Write("Введите имя автора или его фрагмент: ");
-            string author = Console.ReadLine();
-            library.SearchByAuthor(author);
-        }
-
-        static void SearchByISBN(Library library)
-        {
-            Console.Write("Введите ISBN: ");
-            string isbn = Console.ReadLine();
-            library.SearchByISBN(isbn);
-        }
-
-        static void SearchByTags(Library library)
-        {
-            Console.Write("Введите теги через пробел: ");
-            string[] tags = Console.ReadLine().Split(' ');
-            library.SearchByTags(tags);
+            foreach (var book in books)
+            {
+                Console.WriteLine(book);
+            }
         }
     }
 }

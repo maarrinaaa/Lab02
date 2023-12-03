@@ -7,47 +7,42 @@ using System.Threading.Tasks;
 
 namespace Lab02
 {
-    internal class Library
+    internal class Library : ILibrary
     {
-        private List<Book> catalog;
+        private List<Book> _catalog;
 
         public Library()
         {
-            catalog = new List<Book>();
+            _catalog = new List<Book>();
         }
 
         public void AddBook(Book book)
         {
-            catalog.Add(book);
-            Console.WriteLine("\nКнига добавлена в каталог");
+            _catalog.Add(book);
         }
 
-        public void SearchByTitle(string title)
+        public IEnumerable<Book> SearchByTitle(string title)
         {
-            var result = catalog.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
-            DisplayResults(result);
+            return _catalog.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
         }
 
-        public void SearchByAuthor(string author)
+        public IEnumerable<Book> SearchByAuthor(string author)
         {
-            var result = catalog.Where(b => b.Author.Contains(author, StringComparison.OrdinalIgnoreCase));
-            DisplayResults(result);
+            return _catalog.Where(b => b.Author.Contains(author, StringComparison.OrdinalIgnoreCase));
         }
 
-        public void SearchByISBN(string isbn)
+        public IEnumerable<Book> SearchByISBN(string isbn)
         {
-            var result = catalog.Where(b => b.ISBN == isbn);
-            DisplayResults(result);
+            return _catalog.Where(b => b.ISBN == isbn);
         }
 
-        public void SearchByTags(string[] tags)
+        public IEnumerable<Book> SearchByTags(IEnumerable<string> tags)
         {
-            var result = catalog.OrderByDescending(b => tags.Count(k => b.Title.Contains(k, StringComparison.OrdinalIgnoreCase) ||
+            return _catalog.OrderByDescending(b => tags.Count(k => b.Title.Contains(k, StringComparison.OrdinalIgnoreCase) ||
                                                                        b.Author.Contains(k, StringComparison.OrdinalIgnoreCase) ||
                                                                        b.Genres.Any(g => g.Contains(k, StringComparison.OrdinalIgnoreCase)) ||
                                                                        b.Annotation.Contains(k, StringComparison.OrdinalIgnoreCase)))
                                .ThenBy(b => b.Title);
-            DisplayResults(result);
         }
 
         private void DisplayResults(IEnumerable<Book> books)

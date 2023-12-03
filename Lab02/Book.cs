@@ -10,24 +10,34 @@ namespace Lab02
 {
     public class Book //что включает книга, название, автор и тд
     {
-        public string Title { get; set; }
+        public Book(string title, string author, List<string> genres, DateTime publicationDate, string annotation, string isbn, List<string> tags)
+        {
+            Title = title;
+            Author = author;
+            Genres = genres;
+            PublicationDate = publicationDate;
+            Annotation = annotation;
+            ISBN = isbn;
+            Tags = tags;
+        }
+        public string Title { get; private set; }
 
-        public string Author { get; set; }
+        public string Author { get; private set; }
 
-        public List<string> Genres { get; set; }
+        public List<string> Genres { get; private set; }
 
-        public DateTime PublicationDate { get; set; }
+        public DateTime PublicationDate { get; private set; }
 
-        public string Annotation { get; set; }
+        public string Annotation { get; private set; }
 
-        public string ISBN { get; set; }
+        public string ISBN { get; private set; }
 
-        public List<string> Tags { get; set; }
+        public List<string> Tags { get; private set; }
 
 
         public override string ToString() //преобразует в строку введенные данные (названия, автора, номер + добавит by) и выведет на экран 
         {
-            return $"{Title} by {Author}, ISBN: {ISBN}"; //выводится при поиске книги
+            return $"Книга найдена: {Title} by {Author}, ISBN: {ISBN}"; //выводится при поиске книги
         }
     }
 
