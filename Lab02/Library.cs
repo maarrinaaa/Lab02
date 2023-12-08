@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace Lab02
 {
-    internal class Library : ILibrary
+    public class Library : ILibrary
     {
-        private List<Book> _catalog;
+        protected List<Book> _catalog;
 
         public Library()
         {
             _catalog = new List<Book>();
+        }
+
+        public IReadOnlyCollection<Book> GetCatalog()
+        {
+            return _catalog;
         }
 
         public void AddBook(Book book)
@@ -45,13 +50,6 @@ namespace Lab02
                                .ThenBy(b => b.Title);
         }
 
-        private void DisplayResults(IEnumerable<Book> books)
-        {
-            foreach (var book in books)
-            {
-                Console.WriteLine(book);
-            }
-        }
     }
 }
 
